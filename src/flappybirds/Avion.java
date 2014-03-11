@@ -22,6 +22,7 @@ public class Avion extends Base {
     private long tiempoInicial;
     private long tiempoPausa;
     public static int acceleracion = 4;
+    public int angle;
 
     /**
      * Metdo constructor
@@ -35,8 +36,16 @@ public class Avion extends Base {
         xInicial = posX;
         yInicial = posY;
         volverInicio();
+        angle = 0;
     }
 
+    public void setAngle(int delta) {
+        this.angle = delta;
+    }
+    
+    public int getAngle () {
+        return this.angle;
+    }
     /**
      * Metodo que regresa a la granada al inicio y desactiva el movimiento
      */
@@ -73,6 +82,7 @@ public class Avion extends Base {
 
         velX = 0;
         velY = 0;
+        angle = 0;
 
     }
 
