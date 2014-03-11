@@ -82,7 +82,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     
 
 // sounds
-    private SoundClip intro; // sonido cuando la pelota choca con canasta
+    private SoundClip jump; // sonido cuando saltas
+    private SoundClip backMusic; //musica de fondo del juego
+    private SoundClip loseSound; //musica de fondo del juego
    
     // objetos
     private Avion avion;
@@ -133,15 +135,16 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 //        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraAbajo.png"));
 //        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
        
-
-       
-        heart = new ImageIcon("Resources/heart.png");
+       loseSound = new SoundClip("Resources/crashSound.wav");
+       backMusic = new SoundClip("Resources/gameMusic.wav");
+       jump=new SoundClip("Resources/jumpSound.wav");
+       heart = new ImageIcon("Resources/heart.png");
         
         gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
        
         pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
 
-        fotoAvion = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
+        fotoAvion = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/avion/ah.png"));
 
         background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/background.png"));
         tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resourses/instruccionesTiroParabolico.jpg"));
@@ -155,6 +158,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 300, animAvion);
         
         avion.empieza();
+        backMusic.play();
     }
 
     /**
@@ -239,11 +243,12 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 avion.setPosY(23);
                 avion.setVelY(-1);
                 System.out.println( " golpeo ");
+                
             }
             if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
                 
                 perdio = true;
-                
+                loseSound.play();
             }
       
 
@@ -466,10 +471,10 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if ( !pausa ) { // si el juego no ha empezado
                 avion.setVelY(10);
-                
+                jump.play();
                 inicio = true;
-                
             }
+            
         } else if (e.getKeyCode() == KeyEvent.VK_N) {
             if (perdio) {
                 restart();
@@ -478,6 +483,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 perdio = false;
                 avion.empieza();
                 inicio = false;
+                backMusic.play();
             }
         }
 
