@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_P;
@@ -18,6 +19,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,7 +76,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private Image pausaImagen;
     private Image background;
     private ImageIcon heart;
-
+    
+    
+    AffineTransform identity = new AffineTransform();
   
 // animaciones
 
@@ -276,6 +282,25 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 avion.actualiza(tiempoTranscurrido);
 
             }
+             System.out.println(avion.getVelY());
+            if ( avion.getVelY() > 0 && avion.getVelY() < 5) {
+                avion.setAngle(-25);
+               
+            } 
+            else if ( avion.getVelY() > 5 ) {
+                avion.setAngle(-45);
+            }
+            else if ( avion.getVelY() < 0 && avion.getVelY() > -5) {
+                avion.setAngle (25);
+                
+            }
+            else if (avion.getVelY() < -10) {
+               avion.setAngle (45);
+            }
+            else if (avion.getVelY() == 0 ) {
+                avion.setAngle(0);
+            }
+            
 
         }
     }
@@ -306,6 +331,31 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     }
 
     /**
+ * Converts a given Image into a BufferedImage
+ *
+ * @param img The Image to be converted
+ * @return The converted BufferedImage
+ */
+public static BufferedImage toBufferedImage(Image img)
+{
+    if (img instanceof BufferedImage)
+    {
+        return (BufferedImage) img;
+    }
+
+    // Create a buffered image with transparency
+    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+    // Draw the image on to the buffered image
+    Graphics2D bGr = bimage.createGraphics();
+    bGr.drawImage(img, 0, 0, null);
+    bGr.dispose();
+
+    // Return the buffered image
+    return bimage;
+}
+    
+    /**
      * Metodo <I>paint</I> sobrescrito de la clase <code>Applet</code>, heredado
      * de la clase Container.<P>
      * En este metodo se dibuja la imagen con la posicion actualizada, ademas
@@ -326,12 +376,39 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             
             if (!perdio) {
                 
-                
-                       
                
+                Graphics2D g2d = (Graphics2D) g;
+// Rotation information
+                BufferedImage avionB = toBufferedImage(fotoAvion);
+                double rotationRequired = avion.getAngle();
+              
+                double locationX = avionB.getWidth() / 2;
+                double locationY = avionB.getHeight() / 2;
+                AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+                // Drawing the rotated image at the required drawing locations
+
+                
+                g2d.drawImage(op.filter(avionB, null), (int) avion.getPosX() , (int) avion.getPosY(), this);
+
+
 
               
-                g.drawImage(avion.animacion.getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
+              //  g.drawImage(avion.animacion.getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
+                
+              
+                
+
+//                Graphics2D g2d = (Graphics2D)g;
+//                AffineTransform trans = new AffineTransform();
+//                trans.setTransform(identity);
+//                trans.rotate( Math.toRadians(45) );
+//                
+//                g2d.drawImage(avion.getAnimacion().getImagen(), trans, this);
+//                
+//               // g2d.drawImage(avion.getAnimacion().getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
+//                g2d.dispose();
                 
                 if ( !inicio ) {
                     
