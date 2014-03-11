@@ -37,19 +37,13 @@ import javax.swing.ImageIcon;
  */
 public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListener, Runnable {
 
-    // valores numericos
-    private final int posInicialTiro = 400; // empieza en posicion 100 
-    private final int xPanelOrigin = 40;
-    private final int yPanelOrigin = 400;
-    private int caidas;
     private int vidas;
     private int score;
-    private int cantBloques;
+
 
 // strings
     private String[] arr;
     private final String nombreArchivo = "guardar.txt";
-    public static String estado;
 
 // boleanos
     private boolean pausa;      // bool que checa si se pauso
@@ -61,8 +55,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
 //floating
     private long tiempoActual;  // tiempo actual
-    private long tiempoAire;
-    private long tMensaje;
+
 
     // images
     private Image dbImage;	// Imagen a proyectar	
@@ -71,9 +64,6 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private Image fotoBarraAbajo;
     private Image fotoBarraArriba;
    
-    private Image introImagen;
-    private Image bloque1;
-
    
 
     private Image gameOver;
@@ -83,29 +73,23 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private Image background;
     private ImageIcon heart;
 
-    private ImageIcon nuevoJuego;
-    private ImageIcon cargar;
-    private ImageIcon highscores;
-    private ImageIcon creditos;
-
+  
 // animaciones
-    private Animacion anim;
+
     private Animacion animAvion;
     private Animacion animP;
-    private Animacion animBloque;
+
     
 
 // sounds
     private SoundClip intro; // sonido cuando la pelota choca con canasta
-    private SoundClip choqueBloque; // sonido si choca con el suelo
-    private SoundClip choqueSuelo; // sonido si choca con el suelo
-
+   
     // objetos
     private Avion avion;
 
 
 
-    private LinkedList<Tubos> listaBloques;
+    private LinkedList<Tubos> listaTubos;
     private boolean perdio;
 
     /**
@@ -123,7 +107,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
      */
     void init() {
 
-        setTitle("Breaking Bad: The Game");
+        setTitle("Flappy Birds Pirate");
         addKeyListener(this);
         addMouseListener(this);
         setSize(1200, 760);
@@ -132,7 +116,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         Base.setH(getHeight());
        
 
-        listaBloques = new LinkedList();
+        listaTubos = new LinkedList();
 
         vidas = 3;
         score = 0;
@@ -141,33 +125,36 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         instrucciones = false;
         sonido = true;
         inicio = false;
+        perdio = false;
 
    
-        choqueBloque = new SoundClip("Mono/exp.wav");
 
-        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraAbajo.png"));
-        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
+//
+//        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraAbajo.png"));
+//        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
        
 
        
-        heart = new ImageIcon("Mono/heart.png");
+        heart = new ImageIcon("Resources/heart.png");
         
         gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
-        introImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Breakintro.gif"));
+       
         pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
 
-        fotoAvion = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/avion.png"));
+        fotoAvion = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
 
         background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/background.png"));
         tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resourses/instruccionesTiroParabolico.jpg"));
 
         animAvion = new Animacion();
         animP = new Animacion();
-        animBloque = new Animacion();
+       
 
         animAvion.sumaCuadro(fotoAvion, 700);
 
-        avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 660, animP);
+        avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 300, animAvion);
+        
+        avion.empieza();
     }
 
     /**
@@ -224,6 +211,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             if (!pausa && !instrucciones) {
                 actualiza();
                 checaColision();
+
             }
 
             repaint();
@@ -247,14 +235,22 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
        
 
-      
+            if ( avion.getPosY() - 23 < 0) {
+                avion.setPosY(23);
+                avion.setVelY(-1);
+                System.out.println( " golpeo ");
+            }
+            if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
+                
+                perdio = true;
+                
+            }
       
 
 
 
            
-            inicio = false;
-            vidas--;
+          
         }
 
     
@@ -270,9 +266,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
 
             avion.avanza();
-
             
-
             if (avion.getMovimiento()) {
                 avion.actualiza(tiempoTranscurrido);
 
@@ -322,17 +316,22 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         g.drawString("Score: " + score, 44, 195);
         g.setColor(Color.red);
         g.drawString("Vidas: " + vidas, 44, 250);
-        if (cantBloques == 0) {
-            perdio = true;
-        }
+
         if (avion != null) {
+            
             if (!perdio) {
                 
                 
+                       
+               
 
               
                 g.drawImage(avion.animacion.getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
-
+                
+                if ( !inicio ) {
+                    
+                    g.drawString("Preciones ESPACIO para empezar ", Base.getW()/2 - 200, Base.getH()/3   );
+                }
                 if (instrucciones) {
 
                     g.drawImage(tableroInstrucciones, getWidth() / 2 - new ImageIcon(tableroInstrucciones).getIconWidth() / 2,
@@ -369,7 +368,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     public void grabaArchivo() throws IOException {
 
         PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
-        fileOut.println(score + " " + caidas + " " + vidas + " " + avion.getDatos()
+        fileOut.println(score + " "  + " " + vidas + " " + avion.getDatos()
                 + " " + clicked + " " + chocado + " " + pausa + " " + instrucciones + " " + sonido + " ");
                
         fileOut.close();
@@ -392,7 +391,6 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             arr = dato.split(" ");
 
             score = Integer.parseInt(arr[0]);
-            caidas = Integer.parseInt(arr[1]);
             vidas = Integer.parseInt(arr[2]);
             avion.setPosX(Double.parseDouble(arr[5]));
             avion.setPosY(Double.parseDouble(arr[6]));
@@ -467,7 +465,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if ( !pausa ) { // si el juego no ha empezado
-                avion.setVelY(20);
+                avion.setVelY(10);
+                
+                inicio = true;
                 
             }
         } else if (e.getKeyCode() == KeyEvent.VK_N) {
@@ -476,6 +476,8 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 vidas = 3;
                 avion.volverInicio();
                 perdio = false;
+                avion.empieza();
+                inicio = false;
             }
         }
 

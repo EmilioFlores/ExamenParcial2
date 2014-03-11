@@ -21,7 +21,7 @@ public class Avion extends Base {
     private boolean movimiento;
     private long tiempoInicial;
     private long tiempoPausa;
-    public static int acceleracion = 10;
+    public static int acceleracion = 4;
 
     /**
      * Metdo constructor
@@ -58,7 +58,7 @@ public class Avion extends Base {
         if (movimiento) {
 
              setPosY(getPosY() - acceleracion*velY );
-             velY-=5;
+             velY-=2;
         }
     }
 

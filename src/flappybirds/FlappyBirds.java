@@ -17,7 +17,9 @@ public class FlappyBirds {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        // hola
+        FlappyBirdsClass juego = new FlappyBirdsClass();
+        juego.setVisible(true);
+         juego.setDefaultCloseOperation(juego.EXIT_ON_CLOSE);
     }
     
 }
