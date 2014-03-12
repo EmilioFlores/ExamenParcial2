@@ -91,6 +91,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private int randPosYabajo;
     private int tempScore;
     private boolean nombreIngresado;
+    private int distX;
 
     /**
      * Se crea un objeto de la misma clase
@@ -120,6 +121,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
         
         score = 0;
+        distX = 100;
 
 
         instrucciones = false;
@@ -157,10 +159,10 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         listaTubosArriba.add(new Tubos(getWidth() + 100, randPosY, animArriba));
         listaTubosAbajo.add(new Tubos(getWidth() + 100, randPosYabajo, animAbajo));
 
-        randPosY = -(300 + (int) (Math.random() * (getHeight() - 300)));
-        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
-        listaTubosArriba.add(new Tubos(getWidth() + getWidth() / 2 + 100, randPosY, animArriba));
-        listaTubosAbajo.add(new Tubos(getWidth() + getWidth() / 2 + 100, randPosYabajo, animAbajo));
+//        randPosY = -(300 + (int) (Math.random() * (getHeight() - 300)));
+//        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
+//        listaTubosArriba.add(new Tubos(getWidth() + getWidth() / 2 + distX, randPosY, animArriba));
+//        listaTubosAbajo.add(new Tubos(getWidth() + getWidth() / 2 + distX, randPosYabajo, animAbajo));
 
         avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 300, animAvion);
 
@@ -197,17 +199,19 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         Tubos.nivel = 1;
         score = 0;
         tempScore = 0;
+        distX = 100;
 
         perdio = false;
         inicio = false;
+        nombreIngresado = false;
 
         listaTubosArriba.add(new Tubos(getWidth() + 100, randPosY, animArriba));
         listaTubosAbajo.add(new Tubos(getWidth() + 100, randPosYabajo, animAbajo));
 
-        randPosY = -(300 + (int) (Math.random() * (getHeight() - 300)));
-        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
-        listaTubosArriba.add(new Tubos(getWidth() + getWidth() / 2 + 100, randPosY, animArriba));
-        listaTubosAbajo.add(new Tubos(getWidth() + getWidth() / 2 + 100, randPosYabajo, animAbajo));
+//        randPosY = -(300 + (int) (Math.random() * (getHeight() - 300)));
+//        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
+//        listaTubosArriba.add(new Tubos(getWidth() + getWidth() / 2 + distX, randPosY, animArriba));
+//        listaTubosAbajo.add(new Tubos(getWidth() + getWidth() / 2 + distX, randPosYabajo, animAbajo));
     }
 
     /**
@@ -383,18 +387,20 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
             }
 
-            if (tempScore == 5) {
+            if (tempScore == 100) {
                 tempScore = 0;
-                Tubos.nivel += .1;
+                distX +=100;
+                
             }
 
             for (Tubos tubo : listaTubosAbajo) {
 
-                if (tubo.getPosX() + tubo.getAncho() <= 0) {
+                if (tubo.getPosX() + tubo.getAncho() <= getWidth()/2 + distX && !tubo.getPassed2()) {
+                    tubo.setPassed2(true);
+                    
                     randPosY = -(300 + (int) (Math.random() * (getHeight() - 300)));
                     randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
-                    listaTubosArriba.remove(tubo);
-                    listaTubosAbajo.remove(tubo);
+               
                     listaTubosArriba.add(new Tubos(getWidth() + 100, randPosY, animArriba));
                     listaTubosAbajo.add(new Tubos(getWidth() + 100, randPosYabajo, animAbajo));
 
@@ -627,13 +633,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 restart();
 
             }
-<<<<<<< HEAD
-        } 
-=======
-       
->>>>>>> 356d3d28c6ace7f5bb8e6e6ef30ddac302b6dc26
 
-    }}
+    }
+    }
 
     public void mousePressed(MouseEvent e) {
         

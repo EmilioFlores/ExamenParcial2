@@ -1,0 +1,43 @@
+Emilio, 0
+Emilio, 0
+daniel, 1
+null, 0
+null, 0
+null, 7
+null, 0
+nm, 2
+null, 3
+null, 2
+n, 4
+null, 2
+null, 0
+null, 2
+, 1
+ , 0
+n, 3
+nm, 1
+ , 2
+n, 0
+\, 0
+\\, 4
+, 6
+, 2
+null, 1
+n, 3
+, 2
+null, 4
+null, 0
+, 2
+, 3
+n, 1
+, 11
+ , 0
+ , 2
+, 0
+, 3
+, 6
+null, 4
+null, 8
+h\\, 0
+, 1
+, 10

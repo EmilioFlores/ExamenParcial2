@@ -16,6 +16,7 @@ public class Tubos extends Base {
     private double yInicial;
     public static double nivel = 1.0;
     private boolean paso;
+    private boolean paso1;
 
     /**
      * Método constructor de la clase Canasta
@@ -30,6 +31,7 @@ public class Tubos extends Base {
         xInicial = posX;
         yInicial = posY;
         paso = false;
+        paso1 = false;
     }
 
     /**
@@ -76,6 +78,24 @@ public class Tubos extends Base {
      */
     public void setPassed(boolean itPassed) {
         paso = itPassed;
+    }
+    
+        /**
+     * Método que me regresa un boleano para saber si el avion ya paso este tubo
+     *
+     * @return paso2 boolean
+     */
+    public boolean getPassed2() {
+        return paso1;
+    }
+
+    /**
+     * Método de modificacion de la variable <code> paso </code>
+     *
+     * @param itPassed
+     */
+    public void setPassed2(boolean itPassed) {
+        paso1 = itPassed;
     }
 
 }
