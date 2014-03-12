@@ -140,11 +140,18 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 //        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraAbajo.png"));
 //        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
        
+<<<<<<< HEAD
 
        loseSound = new SoundClip("Resources/crashSound.wav");
        backMusic = new SoundClip("Resources/gameMusic.wav");
        jump=new SoundClip("Resources/jumpSound.wav");
       
+=======
+       loseSound = new SoundClip("Resources/crashSound.wav");
+       backMusic = new SoundClip("Resources/gameMusic.wav");
+       jump=new SoundClip("Resources/jumpSound.wav");
+       heart = new ImageIcon("Resources/heart.png");
+>>>>>>> 4e300215d563c91788c986443782a54edf10463b
         
         gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
        
