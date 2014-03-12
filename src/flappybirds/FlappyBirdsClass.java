@@ -43,6 +43,8 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
     private int vidas;
     private int score;
+
+    private int randPosY;
     
 
 // strings
@@ -83,7 +85,8 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
     private Animacion animAvion;
     private Animacion animP;
-
+    private Animacion animArriba;
+    private Animacion animAbajo;
     
 
 // sounds
@@ -96,8 +99,11 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
 
 
-    private LinkedList<Tubos> listaTubos;
+    private LinkedList<Tubos> listaTubosArriba;
+    private LinkedList<Tubos> listaTubosAbajo;
     private boolean perdio;
+    private int randPosYabajo;
+    private int tempScore;
 
     /**
      * Se crea un objeto de la misma clase
@@ -123,7 +129,8 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         Base.setH(getHeight());
        
 
-        listaTubos = new LinkedList();
+        listaTubosArriba = new LinkedList();
+        listaTubosAbajo = new LinkedList();
 
         vidas = 3;
         score = 0;
@@ -136,24 +143,19 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
    
 
-//
-//        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraAbajo.png"));
-//        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
+
+        fotoBarraAbajo = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/tube1.png"));
+        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/tube2.png"));
        
-<<<<<<< HEAD
+
 
        loseSound = new SoundClip("Resources/crashSound.wav");
        backMusic = new SoundClip("Resources/gameMusic.wav");
-       jump=new SoundClip("Resources/jumpSound.wav");
+       jump = new SoundClip("Resources/jumpSound.wav");
       
-=======
-       loseSound = new SoundClip("Resources/crashSound.wav");
-       backMusic = new SoundClip("Resources/gameMusic.wav");
-       jump=new SoundClip("Resources/jumpSound.wav");
-       heart = new ImageIcon("Resources/heart.png");
->>>>>>> 4e300215d563c91788c986443782a54edf10463b
+
         
-        gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
+        gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
        
         pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
 
@@ -164,10 +166,25 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
         animAvion = new Animacion();
         animP = new Animacion();
-       
-
+        animArriba = new Animacion();
+        animAbajo = new Animacion();
+        
+        animArriba.sumaCuadro(fotoBarraArriba, tiempoActual);
+        animAbajo.sumaCuadro(fotoBarraAbajo, tiempoActual);
         animAvion.sumaCuadro(fotoAvion, 700);
-
+        
+        randPosY = -(int) (Math.random() *(3*getWidth()/4)) ;  
+        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight()+200;
+       
+        // crea 2 tubos 
+        listaTubosArriba.add(new Tubos(getWidth()+100, randPosY, animArriba ));
+        listaTubosAbajo.add(new Tubos(getWidth()+100, randPosYabajo, animAbajo ));
+        
+        randPosY = -(int) (Math.random() *(3*getWidth()/4)) ;  
+        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight()+240;
+        listaTubosArriba.add(new Tubos(getWidth()+getWidth()/2+100, randPosY, animArriba ));
+        listaTubosAbajo.add(new Tubos(getWidth()+getWidth()/2+100, randPosYabajo, animAbajo ));
+        
         avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 300, animAvion);
         
         avion.empieza();
@@ -189,7 +206,25 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     }
 
     public void restart() {
-
+        
+        listaTubosArriba.clear();
+        listaTubosAbajo.clear();
+        score = 0;
+        tempScore = 0;
+        avion.volverInicio();
+        perdio = false;
+        avion.empieza();
+        inicio = false;
+        backMusic.play();
+        Tubos.nivel=1;
+        
+        listaTubosArriba.add(new Tubos(getWidth()+100, randPosY, animArriba ));
+        listaTubosAbajo.add(new Tubos(getWidth()+100, randPosYabajo, animAbajo ));
+        
+        randPosY = -(int) (Math.random() *(3*getWidth()/4)) ;  
+        randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight()+240;
+        listaTubosArriba.add(new Tubos(getWidth()+getWidth()/2+100, randPosY, animArriba ));
+        listaTubosAbajo.add(new Tubos(getWidth()+getWidth()/2+100, randPosYabajo, animAbajo ));
         
     }
 
@@ -255,13 +290,39 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             if ( avion.getPosY() - 23 < 0) {
                 avion.setPosY(23);
                 avion.setVelY(-1);
-                System.out.println( " golpeo ");
-                
+               
             }
             if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
                 
                 perdio = true;
                
+            }
+            
+            for ( Tubos tubo : listaTubosArriba) {
+                if (avion.intersecta(tubo)) {
+                    perdio = true;
+                    loseSound.play();
+                    break;
+                }         
+            }
+            
+             for ( Tubos tubo : listaTubosAbajo) {
+                if (avion.intersecta(tubo)) {
+                    perdio = true;
+                    loseSound.play();
+                    break;
+                }
+            }
+             
+             // aumenta score
+               for ( Tubos tubo : listaTubosAbajo) {
+               
+                   if (avion.getPosX()+avion.getAncho() >= tubo.getPosX() + tubo.getAncho() && !tubo.getPassed()) {
+                    tubo.setPassed(true);
+                    score++;
+                    tempScore++;
+                    break;
+                }
             }
       
 
@@ -289,7 +350,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 avion.actualiza(tiempoTranscurrido);
 
             }
-             System.out.println(avion.getVelY());
+            
             if ( avion.getVelY() > 0 && avion.getVelY() < 5) {
                 avion.setAngle(-25);
                
@@ -306,6 +367,39 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             }
             else if (avion.getVelY() == 0 ) {
                 avion.setAngle(0);
+            }
+            
+            // tubos arriba
+            for (Tubos tubo : listaTubosArriba) {
+                tubo.setPosX(tubo.getPosX()- 20*Tubos.nivel);
+                
+                
+            }
+            
+            for (Tubos tubo : listaTubosAbajo) {
+                tubo.setPosX(tubo.getPosX()- 20*Tubos.nivel);
+               
+                }
+            
+             if (tempScore == 5 ) {
+                 tempScore = 0;
+                 Tubos.nivel += .1;
+             }
+           
+            for (Tubos tubo : listaTubosAbajo) {
+              
+                if ( tubo.getPosX() + tubo.getAncho() <= 0 ) {
+                   randPosY = -(int) (Math.random() *(3*getWidth()/4)) ;  
+                   randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight()+240;
+                   listaTubosArriba.remove(tubo);
+                   listaTubosAbajo.remove(tubo);
+                   
+                   listaTubosArriba.add(new Tubos(getWidth()+100, randPosY, animArriba ));
+                   listaTubosAbajo.add(new Tubos(getWidth()+100, randPosYabajo, animAbajo ));
+                   
+                   break;
+        
+                }
             }
            
         }
@@ -371,18 +465,17 @@ public static BufferedImage toBufferedImage(Image img)
      */
     public void paint1(Graphics g) {
 
-        //g.drawImage(introImagen, 0, 0, this);
+       
         g.drawImage(background, 8, 30, this);
         g.setFont(new Font("Serif", Font.BOLD, 34));
-        g.drawString("Score: " + score, 44, 195);
-        g.setColor(Color.red);
-        g.drawString("Vidas: " + vidas, 44, 250);
+        g.drawString("" + score, 220 ,80);
+      
 
         if (avion != null) {
             
             if (!perdio) {
                 
-               
+                
                 Graphics2D g2d = (Graphics2D) g;
 // Rotation information
                 BufferedImage avionB = toBufferedImage(fotoAvion);
@@ -397,25 +490,17 @@ public static BufferedImage toBufferedImage(Image img)
 
                 
                 g2d.drawImage(op.filter(avionB, null), (int) avion.getPosX() , (int) avion.getPosY(), this);
-
-
-
-              
-              //  g.drawImage(avion.animacion.getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
                 
-              
-                
-
-//                Graphics2D g2d = (Graphics2D)g;
-//                AffineTransform trans = new AffineTransform();
-//                trans.setTransform(identity);
-//                trans.rotate( Math.toRadians(45) );
-//                
-//                g2d.drawImage(avion.getAnimacion().getImagen(), trans, this);
-//                
-//               // g2d.drawImage(avion.getAnimacion().getImagen(), (int) avion.getPosX(), (int) avion.getPosY(), this);
-//                g2d.dispose();
-                
+                 for (Tubos tubo : listaTubosArriba) {
+                    g.drawImage(tubo.animacion.getImagen(), (int) tubo.getPosX(), (int) tubo.getPosY() , this);
+                 }
+            
+                for (Tubos tubo : listaTubosAbajo) {
+                    g.drawImage(tubo.animacion.getImagen(), (int) tubo.getPosX(), (int) tubo.getPosY() , this);
+                 
+                }
+ 
+                  
                 if ( !inicio ) {
                     
                     g.drawString("Preciones ESPACIO para empezar ", Base.getW()/2 - 200, Base.getH()/3   );
@@ -554,7 +639,7 @@ public static BufferedImage toBufferedImage(Image img)
             sonido = !sonido;
 
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if ( !pausa ) { // si el juego no ha empezado
+            if ( !pausa && !perdio ) { // si el juego no ha empezado
                 avion.setVelY(10);
                 jump.play();
                 inicio = true;
@@ -563,12 +648,7 @@ public static BufferedImage toBufferedImage(Image img)
         } else if (e.getKeyCode() == KeyEvent.VK_N) {
             if (perdio) {
                 restart();
-                vidas = 3;
-                avion.volverInicio();
-                perdio = false;
-                avion.empieza();
-                inicio = false;
-                backMusic.play();
+               
             }
         }
 

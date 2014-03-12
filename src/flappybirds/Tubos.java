@@ -14,6 +14,8 @@ public class Tubos extends Base {
     private boolean movement;
     private double xInicial;
     private double yInicial;
+    public static double nivel = 1.0;
+    private boolean paso;
 
     /**
      * Método constructor de la clase Canasta
@@ -27,6 +29,7 @@ public class Tubos extends Base {
         movement = false;
         xInicial = posX;
         yInicial = posY;
+        paso = false;
     }
 
     public void volverInicio() {
@@ -54,6 +57,15 @@ public class Tubos extends Base {
         return movement;
     }
     
+    
+    public boolean getPassed() {
+        return paso;
+    }
+    
+    
+    public void setPassed(boolean itPassed) {
+        paso = itPassed;
+    }
     
 
   
