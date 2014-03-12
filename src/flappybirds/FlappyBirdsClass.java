@@ -274,8 +274,12 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     public void checaColision() {
 
         if (avion.getPosY() - 23 < 0) {
-            avion.setPosY(23);
-            avion.setVelY(-1);
+             if (!perdio) {
+                loseSound.play();
+                crashSound.play();
+                backMusic.stop();
+            }
+            perdio = true;
 
         }
         if (avion.getPosY() + avion.getAlto() >= Base.getH()) {
@@ -618,18 +622,21 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 jump.play();
                 inicio = true;
             }
-
-        } else if (e.getKeyCode() == KeyEvent.VK_N) {
-            if (perdio) {
+ if (perdio) {
                 loseSound.stop();
                 restart();
 
             }
+<<<<<<< HEAD
         } 
+=======
+       
+>>>>>>> 356d3d28c6ace7f5bb8e6e6ef30ddac302b6dc26
 
-    }
+    }}
 
     public void mousePressed(MouseEvent e) {
+        
 
     }
 
@@ -640,7 +647,16 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
      */
     @Override
     public void mouseClicked(MouseEvent e) {
+ if (!pausa && !perdio) { // si el juego no ha empezado
+                avion.setVelY(10);
+                jump.play();
+                inicio = true;
+            }
+ if (perdio) {
+                loseSound.stop();
+                restart();
 
+            }
     }
 
     @Override
