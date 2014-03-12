@@ -1,0 +1,37 @@
+﻿Merge branch 'master' of https://github.com/EmilioFlores/ExamenParcial2
+
+Conflicts:
+	nbproject/private/private.xml
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 1 different commit each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   nbproject/private/private.xml
+#	modified:   src/flappybirds/FlappyBirdsClass.java
+#	modified:   src/flappybirds/Resources/Gameover.png
+#	new file:   src/flappybirds/Resources/coin.wav
+#	modified:   src/flappybirds/Resources/tube1.png
+#	modified:   src/flappybirds/Resources/tube2.png
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	nbproject/private/private.xml.BASE.5008.xml
+#	nbproject/private/private.xml.LOCAL.5008.xml
+#	nbproject/private/private.xml.REMOTE.5008.xml
+

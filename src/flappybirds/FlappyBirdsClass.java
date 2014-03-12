@@ -92,7 +92,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 // sounds
     private SoundClip jump; // sonido cuando saltas
     private SoundClip backMusic; //musica de fondo del juego
-    private SoundClip loseSound; //musica de fondo del juego
+    private SoundClip loseSound; //musica de perder el juego
+    private SoundClip crashSound; //musica cuando chocas
+    private SoundClip coin; //sonido cuando ganas punto
    
     // objetos
     private Avion avion;
@@ -149,13 +151,15 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
        
 
 
-       loseSound = new SoundClip("Resources/crashSound.wav");
+       loseSound = new SoundClip("Resources/lostSound.wav");
+       crashSound = new SoundClip("Resources/crashSound.wav");
        backMusic = new SoundClip("Resources/gameMusic.wav");
        jump = new SoundClip("Resources/jumpSound.wav");
+       coin = new SoundClip("Resources/coin.wav");
       
 
         
-        gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
+        gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
        
         pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/pause.png"));
 
@@ -293,23 +297,40 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                
             }
             if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
-                
+                 if (!perdio){
+                     loseSound.play();
+                    crashSound.play();
+                    backMusic.stop();
+                     
+                 }
                 perdio = true;
                
             }
             
             for ( Tubos tubo : listaTubosArriba) {
                 if (avion.intersecta(tubo)) {
+                    if (!perdio){
+                     loseSound.play();
+                    crashSound.play();
+                    backMusic.stop();
+                     
+                 }
                     perdio = true;
-                    loseSound.play();
+                    
                     break;
                 }         
             }
             
              for ( Tubos tubo : listaTubosAbajo) {
                 if (avion.intersecta(tubo)) {
+                    if (!perdio){
+                     loseSound.play();
+                    crashSound.play();
+                    backMusic.stop();
+                     
+                 }
                     perdio = true;
-                    loseSound.play();
+                    
                     break;
                 }
             }
@@ -320,6 +341,8 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                    if (avion.getPosX()+avion.getAncho() >= tubo.getPosX() + tubo.getAncho() && !tubo.getPassed()) {
                     tubo.setPassed(true);
                     score++;
+                    if (!perdio)
+                    coin.play();
                     tempScore++;
                     break;
                 }
@@ -647,7 +670,9 @@ public static BufferedImage toBufferedImage(Image img)
             
         } else if (e.getKeyCode() == KeyEvent.VK_N) {
             if (perdio) {
+                loseSound.stop();
                 restart();
+                
                
             }
         }
