@@ -254,7 +254,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
                 
                 perdio = true;
-                loseSound.play();
+               
             }
       
 
@@ -422,8 +422,9 @@ public static BufferedImage toBufferedImage(Image img)
 
                 if (vidas == 0) {
                     perdio = true;
-
+ 
                     g.drawImage(gameOver, 0, 0, this);
+                    
 
                 }
 
@@ -431,6 +432,7 @@ public static BufferedImage toBufferedImage(Image img)
 
             } else {
                 g.drawImage(gameOver, 8, 30, this);
+                
             }
 
         }
