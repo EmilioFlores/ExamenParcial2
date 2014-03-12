@@ -87,7 +87,9 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     
 
 // sounds
-    private SoundClip intro; // sonido cuando la pelota choca con canasta
+    private SoundClip jump; // sonido cuando saltas
+    private SoundClip backMusic; //musica de fondo del juego
+    private SoundClip loseSound; //musica de fondo del juego
    
     // objetos
     private Avion avion;
@@ -139,8 +141,10 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 //        fotoBarraArriba = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/barraArriba.png"));
        
 
-       
-        
+       loseSound = new SoundClip("Resources/crashSound.wav");
+       backMusic = new SoundClip("Resources/gameMusic.wav");
+       jump=new SoundClip("Resources/jumpSound.wav");
+      
         
         gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
        
@@ -160,6 +164,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         avion = new Avion(getWidth() / 2 - new ImageIcon(fotoAvion).getIconWidth() / 2 + 20, 300, animAvion);
         
         avion.empieza();
+        backMusic.play();
     }
 
     /**
@@ -244,11 +249,12 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 avion.setPosY(23);
                 avion.setVelY(-1);
                 System.out.println( " golpeo ");
+                
             }
             if ( avion.getPosY() + avion.getAlto() >= Base.getH() ) {
                 
                 perdio = true;
-                
+               
             }
       
 
@@ -415,8 +421,9 @@ public static BufferedImage toBufferedImage(Image img)
 
                 if (vidas == 0) {
                     perdio = true;
-
+ 
                     g.drawImage(gameOver, 0, 0, this);
+                    
 
                 }
 
@@ -424,6 +431,7 @@ public static BufferedImage toBufferedImage(Image img)
 
             } else {
                 g.drawImage(gameOver, 8, 30, this);
+                
             }
 
         }
@@ -541,10 +549,10 @@ public static BufferedImage toBufferedImage(Image img)
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if ( !pausa ) { // si el juego no ha empezado
                 avion.setVelY(10);
-                
+                jump.play();
                 inicio = true;
-                
             }
+            
         } else if (e.getKeyCode() == KeyEvent.VK_N) {
             if (perdio) {
                 restart();
@@ -553,6 +561,7 @@ public static BufferedImage toBufferedImage(Image img)
                 perdio = false;
                 avion.empieza();
                 inicio = false;
+                backMusic.play();
             }
         }
 
