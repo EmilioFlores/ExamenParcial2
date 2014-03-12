@@ -19,13 +19,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -39,6 +43,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
 // strings
     private String[] arr;
+    private String nombre;
     private final String nombreArchivo = "guardar.txt";
 
 // boleanos
@@ -85,6 +90,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private boolean perdio;
     private int randPosYabajo;
     private int tempScore;
+    private boolean nombreIngresado;
 
     /**
      * Se crea un objeto de la misma clase
@@ -120,6 +126,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         sonido = true;
         inicio = false;
         perdio = false;
+        nombreIngresado = false;
 
         loseSound = new SoundClip("Resources/lostSound.wav");
         crashSound = new SoundClip("Resources/crashSound.wav");
@@ -236,8 +243,14 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
         //Ciclo principal del Applet. Actualiza y despliega en pantalla la animación hasta que el Applet sea cerrado
         while (true) {
             if (!pausa && !instrucciones) {
-                actualiza();
+                try {
+                    actualiza();
+                } catch (IOException ex) {
+                    Logger.getLogger(FlappyBirdsClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+             
                 checaColision();
+                
 
             }
 
@@ -294,9 +307,11 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                     loseSound.play();
                     crashSound.play();
                     backMusic.stop();
+          
 
                 }
                 perdio = true;
+                
 
                 break;
             }
@@ -315,6 +330,10 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 break;
             }
         }
+        
+        
+        
+        
 
     }
 
@@ -323,7 +342,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
      * posiciones de el objeto bueno, los objetos malos y da los tiempos para
      * cada segmento de animacion.
      */
-    public void actualiza() {
+    public void actualiza() throws IOException {
 
         if (inicio) {
             long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
@@ -372,7 +391,6 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                     randPosYabajo = randPosY + new ImageIcon(fotoBarraArriba).getIconHeight() + 240;
                     listaTubosArriba.remove(tubo);
                     listaTubosAbajo.remove(tubo);
-                    System.out.println(randPosY);
                     listaTubosArriba.add(new Tubos(getWidth() + 100, randPosY, animArriba));
                     listaTubosAbajo.add(new Tubos(getWidth() + 100, randPosYabajo, animAbajo));
 
@@ -380,6 +398,14 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
                 }
             }
+            
+            if ( perdio && !nombreIngresado) {
+                nombre = JOptionPane.showInputDialog("Cual es tu nombre?");
+                nombreIngresado = true;
+                grabaArchivo();
+                
+            }
+            
 
         }
     }
@@ -505,11 +531,11 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
      */
     public void grabaArchivo() throws IOException {
 
-        PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
-        fileOut.println(score +  " " + avion.getDatos() + " " + listaTubosArriba + " " + listaTubosAbajo + " "
-                 + pausa + " " + instrucciones + " " + sonido + " ");
-
-        fileOut.close();
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("guardar.txt", true)))) {
+        out.println(nombre + ", " + score);
+        }catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
     }
 
     /**
@@ -581,18 +607,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 avion.despausa();
 
             }
-        } else if (e.getKeyCode() == KeyEvent.VK_I) {
-
-            if (!instrucciones) {
-                instrucciones = true;
-                avion.pausa();
-
-            } else {
-
-                instrucciones = false;
-                avion.despausa();
-
-            }
+        
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
 
             sonido = !sonido;
@@ -610,7 +625,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
                 restart();
 
             }
-        }
+        } 
 
     }
 
