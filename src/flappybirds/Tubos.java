@@ -32,6 +32,9 @@ public class Tubos extends Base {
         paso = false;
     }
 
+    /**
+     * Método que regresa el objeto al inicio
+     */
     public void volverInicio() {
 
         setPosX(xInicial);
@@ -56,17 +59,23 @@ public class Tubos extends Base {
     public boolean getMovement() {
         return movement;
     }
-    
-    
+
+    /**
+     * Método que me regresa un boleano para saber si el avion ya paso este tubo
+     *
+     * @return paso boolean
+     */
     public boolean getPassed() {
         return paso;
     }
-    
-    
+
+    /**
+     * Método de modificacion de la variable <code> paso </code>
+     *
+     * @param itPassed
+     */
     public void setPassed(boolean itPassed) {
         paso = itPassed;
     }
-    
 
-  
 }

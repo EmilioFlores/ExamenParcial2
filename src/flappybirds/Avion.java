@@ -39,10 +39,18 @@ public class Avion extends Base {
         angle = 0;
     }
 
+    /**
+     * Modifica el angulo actual de la imagen para ser rotada
+     * @param delta 
+     */
     public void setAngle(int delta) {
         this.angle = delta;
     }
     
+    /**
+     * Método que asigna el <code> angulo </code> del <I>Avion</I>
+     * @return 
+     */
     public int getAngle () {
         return this.angle;
     }
