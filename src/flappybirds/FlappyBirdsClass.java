@@ -43,7 +43,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
 
     private int vidas;
     private int score;
-
+    
 
 // strings
     private String[] arr;
@@ -75,8 +75,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
     private Image tableroInstrucciones;
     private Image pausaImagen;
     private Image background;
-    private ImageIcon heart;
-    
+
     
     AffineTransform identity = new AffineTransform();
   
@@ -141,7 +140,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
        
 
        
-        heart = new ImageIcon("Resources/heart.png");
+        
         
         gameOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resources/Gameover.png"));
        
@@ -295,8 +294,7 @@ public class FlappyBirdsClass extends JFrame implements KeyListener, MouseListen
             else if (avion.getVelY() == 0 ) {
                 avion.setAngle(0);
             }
-            
-
+           
         }
     }
 
